@@ -1,1 +1,2 @@
 # SocialApplication
+Rebecca N. Mancini
