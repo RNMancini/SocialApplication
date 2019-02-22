@@ -26,7 +26,8 @@ mongoose
 app.use(passport.initialize());
 
 // Passport config
-require("./config/pas");
+//require("./config/pas");
+require("./config/passport")(passport);
 
 // Use Routes
 app.use("/api/users", users);
