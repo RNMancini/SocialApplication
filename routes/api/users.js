@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 const gravatar = require("gravatar");
 const bcrypt = require("bcrypt.js");
+const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
+// Load user model
 const passport = require('passport');
-
+const User = require('../../models/User');
 // Load Input Validation
 const validateRegisterInput = require('../'../validation/register');
 const validateLoginInput = require('../'../validation/login');
@@ -20,18 +22,20 @@ router.get("/test", (req, res) => res.json({ msg: "Users Works" }));
 // @route  GET api/users/test
 // @desc   TESTS users route
 // @access PUBLIC
-router.post("/register", (req, res) => {
+//router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
+router.post('/register', (req, res) => User.findOne({ email: req.body.email }) 
 
   // Check Validation
   if(!isValid) {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: req.body.email }).then(user => {
+ .then(user => {
     if (user) {
       errors.email = 'Email already exists';
-      return res.status(400).json(errors);
+      //return res.status(400).json(errors);
+      return res.status(400).json({email: 'Email already exists'});
     } else {
       const avatar = gravatar.url(req.body.email, {
         s: "200", // size
@@ -63,25 +67,22 @@ router.post("/register", (req, res) => {
 // @route  GET api/users/login
 // @desc   Login User / Returning JWT Token
 // @access Public
+
 router.post('/login', (req, res) => {
-
-  const { errors, isValid } = validateRegisterInput(req.body);
-
-  // Check Validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
   const email = req.body.email;
   const password = req.body.password;
+  //const { errors, isValid } = validateRegisterInput(req.body);
+
+  // Check Validation
+  //if (!isValid) { return res.status(400).json(errors); }
 
   // Find the user by email
   User.findOne({email})
     .then(user => {
       // Check for user
       if(!user) {
-        errors.email = 'User not found';
-        return res.status(404).json(errors);
+        //errors.email = 'User not found';
+        return res.status(404).json({email: 'User not found'});
       }
 
       // Check Password
@@ -103,8 +104,8 @@ router.post('/login', (req, res) => {
           }
         );
       } else {
-        errors.password = 'Password incorrect';
-        return res.status(400).json(errors);
+        //errors.password = 'Password incorrect';
+        return res.status(400).json({password: 'Password incorrect'});
       }
     });
   });
@@ -116,7 +117,6 @@ router.post('/login', (req, res) => {
 router.get('/current', passport.authenticate('jwt', { session: false }), 
   (req, res) => {
     res.json({ msg: 'Success' });
-  }
-);
+  });
 
 module.exports = router;
