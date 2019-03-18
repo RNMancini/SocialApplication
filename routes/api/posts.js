@@ -3,6 +3,11 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 
+//@route  GET api/posts/test
+//@desc   Tests post route
+//@access Public
+
+
 // Post model
 const Post = require('../../model/Post');
 
@@ -40,7 +45,7 @@ router.post(
   
 router.delete('/:id', passport.authenticate('jwt', { session: false }),
   (req, res) => { Profile.findOne({ user: req.user.id })
-  .then(;rofile +> {
+  .then(profile => {
       Post.findById(req.params.id)
       .then(post => {
           // Check for post owner
