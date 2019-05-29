@@ -110,7 +110,7 @@ router.post('/unlike/:id', passport.authenticate('jwt', { session: false }),
          if(post.likes.filter(like => like.user.toString() === req.user.id).length == 0) {
            return res.status(400).json({ notliked: 'You have not yet liked this post' });
          } 
-         
+         //post
          // Get remove index
          const removeIndex = post.likes
          .map(item => item.user.toString())
