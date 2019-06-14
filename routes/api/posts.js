@@ -193,7 +193,7 @@ if (!isValid) {
 // @route  POST api/posts/comment/:id
 // @desc   Add comment to post
 // @access Private
-router.post('/comment/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/comment/:id/:comment_id', passport.authenticate('jwt', { session: false }), (req, res) => {
   Post.findById(req.params.id)
       .then(post => {
           const NewComment = {
